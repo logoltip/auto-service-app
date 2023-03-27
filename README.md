@@ -62,4 +62,4 @@ To run this project, you will need to have Java 17, PostgreSQL, and Maven instal
  - The salary of a mechanic is calculated as 40% of the cost of the work he worked on. 
  - When calculating and paying the salary of a mechanic, the status of the work is updated to "PAID OUT". 
  - When changing the status of an order to "COMPLETE SUCCESSFULLY" or "COMPLETE UNSUCCESSFULLY", the completion date is set to the current date. 
- - The diagnostic service is free if the car owner agrees to the repair, and costs 500 UAH if the car owner refuses.# cinema-app
+ - The diagnostic service is free if the car owner agrees to the repair, and costs 500 UAH if the car owner refuses.
