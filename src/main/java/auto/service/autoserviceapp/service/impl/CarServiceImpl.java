@@ -25,7 +25,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findAllById(List<Long> carIds) {
+    public List<Car> findAllByIds(List<Long> carIds) {
         return carRepository.findAllById(carIds);
     }
 }

@@ -27,8 +27,8 @@ public class OrderMapper implements RequestDtoMapper<OrderRequestDto, Order>,
         Order order = new Order();
         order.setCar(carService.findById(dto.getCarId()));
         order.setProblemDescription(dto.getProblemDescription());
-        order.setProducts(productService.findAllById(dto.getProductIds()));
-        order.setWorks(workService.findAllById(dto.getWorkIds()));
+        order.setProducts(productService.findAllByIds(dto.getProductIds()));
+        order.setWorks(workService.findAllByIds(dto.getWorkIds()));
         return order;
     }
 

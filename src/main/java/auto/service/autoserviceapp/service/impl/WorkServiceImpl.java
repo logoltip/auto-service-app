@@ -19,7 +19,7 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<Work> findAllById(List<Long> workIds) {
+    public List<Work> findAllByIds(List<Long> workIds) {
         return workRepository.findAllById(workIds);
     }
 
@@ -30,14 +30,14 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<Work> findAllByMechanicId(Long id) {
-        return workRepository.findAllByMechanicId(id);
+    public List<Work> findAllByMechanicId(Long mechanicId) {
+        return workRepository.findAllByMechanicId(mechanicId);
     }
 
     @Override
     public Work updatePaidStatus(
             Long id,
-            Work.PaidStatus paidStatus
+            Work.PaymentStatus paidStatus
     ) {
         Work work = findById(id);
         work.setPaidStatus(paidStatus);

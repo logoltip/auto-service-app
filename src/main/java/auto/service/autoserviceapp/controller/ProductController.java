@@ -9,6 +9,7 @@ import auto.service.autoserviceapp.service.ProductService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,17 +28,19 @@ public class ProductController {
     @PostMapping
     @ApiOperation(value = "Create a new product")
     public ProductResponseDto create(
-            @RequestBody @ApiParam(value = "Product id") ProductRequestDto productRequestDto
+            @RequestBody @Validated @ApiParam(value = "Product parameters")
+            ProductRequestDto productRequestDto
     ) {
-        Product product = productService.save(requestDtoMapper.mapToModel(productRequestDto));
-        return responseDtoMapper.mapToDto(product);
+        Product product = requestDtoMapper.mapToModel(productRequestDto);
+        return responseDtoMapper.mapToDto(productService.save(product));
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a product by id")
     public ProductResponseDto update(
             @PathVariable @ApiParam(value = "Product id") Long id,
-            @RequestBody @ApiParam(value = "Product parameters") ProductRequestDto productRequestDto
+            @RequestBody @Validated @ApiParam(value = "Product parameters")
+            ProductRequestDto productRequestDto
     ) {
         Product product = requestDtoMapper.mapToModel(productRequestDto);
         product.setId(id);

@@ -5,7 +5,6 @@ import auto.service.autoserviceapp.model.Work;
 import auto.service.autoserviceapp.repository.MechanicRepository;
 import auto.service.autoserviceapp.service.MechanicService;
 import auto.service.autoserviceapp.service.WorkService;
-import auto.service.autoserviceapp.service.calculator.PaymentCalculator;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,7 +18,6 @@ public class MechanicServiceImpl implements MechanicService {
     private static final BigDecimal PERCENTAGE_OF_MECHANIC_SALARY = new BigDecimal("0.4");
     private final MechanicRepository mechanicRepository;
     private final WorkService workService;
-    private final PaymentCalculator<BigDecimal, List<Work>> paymentCalculator;
 
     @Override
     public Mechanic save(Mechanic mechanic) {
@@ -33,14 +31,16 @@ public class MechanicServiceImpl implements MechanicService {
     }
 
     @Override
-    public BigDecimal getMechanicSalary(Long id) {
+    public BigDecimal getSalary(Long id) {
         Mechanic mechanic = findById(id);
         List<Work> workList = workService.findAllByMechanicId(id).stream()
-                .filter(work -> work.getPaidStatus().equals(Work.PaidStatus.NOT_PAID))
-                .collect(Collectors.toList());
-        BigDecimal salary = paymentCalculator.calculate(workList);
+                .filter(work -> work.getPaidStatus().equals(Work.PaymentStatus.NOT_PAID))
+                .toList();
+        BigDecimal salary = workList.stream()
+                .map(Work::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         mechanic.setCompletedWorks(workList.stream()
-                .peek(w -> w.setPaidStatus(Work.PaidStatus.PAID_OUT))
+                .peek(w -> w.setPaidStatus(Work.PaymentStatus.PAID_OUT))
                 .collect(Collectors.toList()));
         save(mechanic);
         return salary.multiply(PERCENTAGE_OF_MECHANIC_SALARY);

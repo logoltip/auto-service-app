@@ -6,11 +6,11 @@ import java.util.List;
 public interface WorkService {
     Work save(Work work);
 
-    List<Work> findAllById(List<Long> workIds);
+    List<Work> findAllByIds(List<Long> workIds);
 
     Work findById(Long id);
 
-    List<Work> findAllByMechanicId(Long id);
+    List<Work> findAllByMechanicId(Long mechanicId);
 
-    Work updatePaidStatus(Long id, Work.PaidStatus paidStatus);
+    Work updatePaidStatus(Long id, Work.PaymentStatus paidStatus);
 }

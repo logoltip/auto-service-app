@@ -8,5 +8,5 @@ public interface ProductService {
 
     Product findById(Long productId);
 
-    List<Product> findAllById(List<Long> productIds);
+    List<Product> findAllByIds(List<Long> productIds);
 }

@@ -9,11 +9,11 @@ public interface OrderService {
 
     Order findById(Long id);
 
-    List<Order> findAllById(List<Long> orderIds);
+    List<Order> findAllByIds(List<Long> orderIds);
 
-    Order addProductsToOrder(Long orderId, List<Long> productId);
+    Order addProductsToOrder(Long orderId, List<Long> productIds);
 
-    Order addWorksToOrder(Long orderId, List<Long> productId);
+    Order addWorksToOrder(Long orderId, List<Long> productIds);
 
     Order updateOrderStatus(Long orderId, Order.OrderStatus orderStatus);
 

@@ -6,7 +6,7 @@ import auto.service.autoserviceapp.mapper.RequestDtoMapper;
 import auto.service.autoserviceapp.mapper.ResponseDtoMapper;
 import auto.service.autoserviceapp.model.Mechanic;
 import auto.service.autoserviceapp.model.Work;
-import auto.service.autoserviceapp.service.WorkService;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,13 +15,12 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MechanicMapper implements RequestDtoMapper<MechanicRequestDto, Mechanic>,
         ResponseDtoMapper<MechanicResponseDto, Mechanic> {
-    private final WorkService workService;
 
     @Override
     public Mechanic mapToModel(MechanicRequestDto dto) {
         Mechanic mechanic = new Mechanic();
         mechanic.setFullName(dto.getFullName());
-        mechanic.setCompletedWorks(workService.findAllById(dto.getCompletedWorkIds()));
+        mechanic.setCompletedWorks(new ArrayList<>());
         return mechanic;
     }
 

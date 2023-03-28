@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,8 @@ public class MechanicController {
     @PostMapping
     @ApiOperation(value = "Create a new mechanic")
     public MechanicResponseDto save(
-            @RequestBody @ApiParam(value = "Mechanic id") MechanicRequestDto mechanicRequestDto
+            @RequestBody @Validated @ApiParam(value = "Mechanic parameters")
+            MechanicRequestDto mechanicRequestDto
     ) {
         Mechanic mechanic = mechanicService.save(requestDtoMapper.mapToModel(mechanicRequestDto));
         return responseDtoMapper.mapToDto(mechanic);
@@ -48,7 +50,8 @@ public class MechanicController {
     @ApiOperation(value = "Update a mechanic by id")
     public MechanicResponseDto update(
             @PathVariable @ApiParam(value = "Mechanic id") Long id,
-            @RequestBody @ApiParam(value = "Mechanic param") MechanicRequestDto mechanicRequestDto
+            @RequestBody @Validated @ApiParam(value = "Mechanic parameters")
+            MechanicRequestDto mechanicRequestDto
     ) {
         Mechanic mechanic = requestDtoMapper.mapToModel(mechanicRequestDto);
         mechanic.setId(id);
@@ -57,11 +60,11 @@ public class MechanicController {
 
     @GetMapping("/{id}/works")
     @ApiOperation(value = "Get a list of completed works by mechanic")
-    public List<WorkResponseDto> getWorkList(
+    public List<WorkResponseDto> getWorksByMechanicId(
             @PathVariable @ApiParam(value = "Mechanic id") Long id
     ) {
         Mechanic mechanic = mechanicService.findById(id);
-        List<Work> workList = workService.findAllById(mechanic.getCompletedWorks().stream()
+        List<Work> workList = workService.findAllByIds(mechanic.getCompletedWorks().stream()
                 .map(Work::getId)
                 .collect(Collectors.toList()));
         return workList.stream()
@@ -71,10 +74,10 @@ public class MechanicController {
 
     @GetMapping("/{id}/salary")
     @ApiOperation(value = "Get mechanic salary")
-    public PaymentResponseDto getMechanicSalary(
+    public PaymentResponseDto getSalary(
             @PathVariable @ApiParam(value = "Mechanic id") Long id
     ) {
-        BigDecimal mechanicSalary = mechanicService.getMechanicSalary(id);
+        BigDecimal mechanicSalary = mechanicService.getSalary(id);
         return paymentResponseDtoMapper.mapToDto(mechanicSalary);
     }
 }

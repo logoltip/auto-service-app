@@ -8,5 +8,5 @@ public interface CarService {
 
     Car findById(Long id);
 
-    List<Car> findAllById(List<Long> carIds);
+    List<Car> findAllByIds(List<Long> carIds);
 }

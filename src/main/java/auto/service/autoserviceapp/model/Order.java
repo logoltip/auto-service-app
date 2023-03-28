@@ -37,8 +37,8 @@ public class Order {
     public enum OrderStatus {
         ACCEPTED,
         IN_PROCESS,
-        COMPLETE_SUCCESSFULLY,
-        COMPLETE_UNSUCCESSFULLY,
+        COMPLETED_SUCCESSFULLY,
+        COMPLETED_UNSUCCESSFULLY,
         PAID
     }
 }

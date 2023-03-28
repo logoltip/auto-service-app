@@ -8,5 +8,5 @@ public interface MechanicService {
 
     Mechanic findById(Long id);
 
-    BigDecimal getMechanicSalary(Long id);
+    BigDecimal getSalary(Long id);
 }

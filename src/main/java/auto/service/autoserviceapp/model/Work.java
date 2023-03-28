@@ -24,9 +24,9 @@ public class Work {
     @ManyToOne(fetch = FetchType.LAZY)
     private Mechanic mechanic;
     private BigDecimal price;
-    private PaidStatus paidStatus;
+    private PaymentStatus paidStatus;
 
-    public enum PaidStatus {
+    public enum PaymentStatus {
         NOT_PAID,
         PAID_OUT
     }

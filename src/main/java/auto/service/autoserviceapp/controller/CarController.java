@@ -9,6 +9,7 @@ import auto.service.autoserviceapp.service.CarService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,17 +28,19 @@ public class CarController {
     @PostMapping
     @ApiOperation(value = "Create a new car")
     public CarResponseDto create(
-            @RequestBody @ApiParam(value = "Car parameters") CarRequestDto carRequestDto
+            @RequestBody @Validated @ApiParam(value = "Car parameters")
+            CarRequestDto carRequestDto
     ) {
-        Car car = carService.save(requestDtoMapper.mapToModel(carRequestDto));
-        return responseDtoMapper.mapToDto(car);
+        Car car = requestDtoMapper.mapToModel(carRequestDto);
+        return responseDtoMapper.mapToDto(carService.save(car));
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a car by id")
     public CarResponseDto update(
             @PathVariable @ApiParam(value = "Car id") Long id,
-            @RequestBody @ApiParam(value = "Car parameters") CarRequestDto carRequestDto
+            @RequestBody @Validated @ApiParam(value = "Car parameters")
+            CarRequestDto carRequestDto
     ) {
         Car car = requestDtoMapper.mapToModel(carRequestDto);
         car.setId(id);

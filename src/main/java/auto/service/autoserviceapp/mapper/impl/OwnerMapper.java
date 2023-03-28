@@ -25,8 +25,8 @@ public class OwnerMapper implements RequestDtoMapper<OwnerRequestDto, Owner>,
         Owner owner = new Owner();
         owner.setFullName(dto.getFullName());
         owner.setPhoneNumber(dto.getPhoneNumber());
-        owner.setCars(carService.findAllById(dto.getCarIds()));
-        owner.setOrders(orderService.findAllById(dto.getCarIds()));
+        owner.setCars(carService.findAllByIds(dto.getCarIds()));
+        owner.setOrders(orderService.findAllByIds(dto.getCarIds()));
         return owner;
     }
 

@@ -12,5 +12,5 @@ public class WorkResponseDto {
     private Long orderId;
     private Long mechanicId;
     private BigDecimal price;
-    private Work.PaidStatus paidStatus;
+    private Work.PaymentStatus paidStatus;
 }

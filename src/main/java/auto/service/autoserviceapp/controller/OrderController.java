@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,8 @@ public class OrderController {
     @PostMapping
     @ApiOperation(value = "Create a new order")
     public OrderResponseDto save(
-            @RequestBody @ApiParam(value = "Order parameters") OrderRequestDto orderRequestDto
+            @RequestBody @Validated @ApiParam(value = "Order parameters")
+            OrderRequestDto orderRequestDto
     ) {
         Order order = requestDtoMapper.mapToModel(orderRequestDto);
         order.setOrderDate(LocalDate.now());
@@ -65,7 +67,8 @@ public class OrderController {
     @ApiOperation(value = "Update order by id")
     public OrderResponseDto update(
             @PathVariable @ApiParam(value = "Order id") Long id,
-            @RequestBody @ApiParam(value = "Order parameters") OrderRequestDto orderRequestDto
+            @RequestBody @Validated @ApiParam(value = "Order parameters")
+            OrderRequestDto orderRequestDto
     ) {
         Order order = requestDtoMapper.mapToModel(orderRequestDto);
         order.setId(id);
@@ -79,7 +82,7 @@ public class OrderController {
             @RequestBody @ApiParam(value = "Order status") Order.OrderStatus orderStatus
     ) {
         Order order = orderService.updateOrderStatus(id, orderStatus);
-        return responseDtoMapper.mapToDto(order);
+        return responseDtoMapper.mapToDto(orderService.save(order));
     }
 
     @GetMapping("/{id}/cost")

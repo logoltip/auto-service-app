@@ -7,7 +7,6 @@ import auto.service.autoserviceapp.repository.OrderRepository;
 import auto.service.autoserviceapp.service.OrderService;
 import auto.service.autoserviceapp.service.ProductService;
 import auto.service.autoserviceapp.service.WorkService;
-import auto.service.autoserviceapp.service.calculator.PaymentCalculator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,8 +24,6 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final OrderRepository orderRepository;
     private final WorkService workService;
-    private final PaymentCalculator<BigDecimal, List<Work>> workCalculator;
-    private final PaymentCalculator<BigDecimal, List<Product>> productCalculator;
 
     @Override
     public Order save(Order order) {
@@ -40,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllById(List<Long> orderIds) {
+    public List<Order> findAllByIds(List<Long> orderIds) {
         return orderRepository.findAllById(orderIds);
     }
 
@@ -50,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
             List<Long> productIds
     ) {
         Order order = findById(orderId);
-        List<Product> products = productService.findAllById(productIds);
+        List<Product> products = productService.findAllByIds(productIds);
         order.getProducts().addAll(products);
         return order;
     }
@@ -61,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
             List<Long> workIds
     ) {
         Order order = findById(orderId);
-        List<Work> works = workService.findAllById(workIds);
+        List<Work> works = workService.findAllByIds(workIds);
         order.getWorks().addAll(works);
         return order;
     }
@@ -72,23 +69,26 @@ public class OrderServiceImpl implements OrderService {
             Order.OrderStatus orderStatus
     ) {
         Order order = findById(orderId);
-        if (orderStatus.equals(Order.OrderStatus.COMPLETE_SUCCESSFULLY)
-                || orderStatus.equals(Order.OrderStatus.COMPLETE_UNSUCCESSFULLY)) {
+        if (orderStatus.equals(Order.OrderStatus.COMPLETED_SUCCESSFULLY)
+                || orderStatus.equals(Order.OrderStatus.COMPLETED_UNSUCCESSFULLY)) {
             order.setCompletionDate(LocalDate.now());
         }
         order.setOrderStatus(orderStatus);
-        save(order);
         return order;
     }
 
     @Override
     public BigDecimal calculateTotalCost(Order order) {
         int countOfOwnerOrders = order.getCar().getOwner().getOrders().size();
-        BigDecimal worksPrice = workCalculator.calculate(order.getWorks());
+        BigDecimal worksPrice = order.getWorks().stream()
+                .map(Work::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (order.getWorks().size() > ONLY_DIAGNOSTICS) {
             worksPrice = worksPrice.subtract(PRICE_OF_DIAGNOSTICS);
         }
-        BigDecimal productsPrice = productCalculator.calculate(order.getProducts());
+        BigDecimal productsPrice = order.getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal workPriceAfterDiscount =
                 getDiscount(DISCOUNT_ON_THE_WORK, countOfOwnerOrders, worksPrice);
         BigDecimal productPriceAfterDiscount =

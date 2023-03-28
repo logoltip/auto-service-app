@@ -20,7 +20,6 @@ public class WorkMapper implements RequestDtoMapper<WorkRequestDto, Work>,
     @Override
     public Work mapToModel(WorkRequestDto dto) {
         Work work = new Work();
-        work.setPaidStatus(Work.PaidStatus.NOT_PAID);
         work.setPrice(dto.getPrice());
         work.setOrder(orderService.findById(dto.getOrderId()));
         work.setMechanic(mechanicService.findById(dto.getMechanicId()));

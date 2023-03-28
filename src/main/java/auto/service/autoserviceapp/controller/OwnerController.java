@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,17 +34,20 @@ public class OwnerController {
     @PostMapping
     @ApiOperation(value = "Create a new owner")
     public OwnerResponseDto create(
-            @RequestBody @ApiParam(value = "Owner id") OwnerRequestDto ownerRequestDto
+            @RequestBody
+            @Validated
+            @ApiParam(value = "Owner parameters") OwnerRequestDto ownerRequestDto
     ) {
-        Owner owner = ownerService.save(requestDtoMapper.mapToModel(ownerRequestDto));
-        return responseDtoMapper.mapToDto(owner);
+        Owner owner = requestDtoMapper.mapToModel(ownerRequestDto);
+        return responseDtoMapper.mapToDto(ownerService.save(owner));
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a owner by id")
     public OwnerResponseDto update(
             @PathVariable @ApiParam(value = "Owner id") Long id,
-            @RequestBody @ApiParam(value = "Owner parameters") OwnerRequestDto ownerRequestDto
+            @RequestBody @Validated @ApiParam(value = "Owner parameters")
+            OwnerRequestDto ownerRequestDto
     ) {
         Owner owner = requestDtoMapper.mapToModel(ownerRequestDto);
         owner.setId(id);
@@ -52,7 +56,7 @@ public class OwnerController {
 
     @GetMapping("/{id}/orders")
     @ApiOperation(value = "Get all orders by owner id")
-    public List<OrderResponseDto> getOrderList(
+    public List<OrderResponseDto> getOrdersByOwnerId(
             @PathVariable @ApiParam(value = "Owner id") Long id
     ) {
         Owner owner = ownerService.findById(id);

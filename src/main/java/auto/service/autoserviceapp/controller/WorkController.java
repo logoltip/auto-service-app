@@ -27,10 +27,11 @@ public class WorkController {
     @PostMapping
     @ApiOperation(value = "Create a new work")
     public WorkResponseDto create(
-            @RequestBody @ApiParam(value = "Work id") WorkRequestDto workRequestDto
+            @RequestBody @ApiParam(value = "Work parameters") WorkRequestDto workRequestDto
     ) {
-        Work work = workService.save(requestDtoMapper.mapToModel(workRequestDto));
-        return responseDtoMapper.mapToDto(work);
+        Work work = requestDtoMapper.mapToModel(workRequestDto);
+        work.setPaidStatus(Work.PaymentStatus.NOT_PAID);
+        return responseDtoMapper.mapToDto(workService.save(work));
     }
 
     @PutMapping("/{id}")
@@ -48,7 +49,7 @@ public class WorkController {
     @ApiOperation(value = "Update paid status by id")
     public WorkResponseDto updatePaidStatus(
             @PathVariable @ApiParam(value = "Work id") Long id,
-            @RequestBody @ApiParam(value = "Work status") Work.PaidStatus paidStatus
+            @RequestBody @ApiParam(value = "Work status") Work.PaymentStatus paidStatus
     ) {
         Work work = workService.updatePaidStatus(id, paidStatus);
         return responseDtoMapper.mapToDto(workService.save(work));
