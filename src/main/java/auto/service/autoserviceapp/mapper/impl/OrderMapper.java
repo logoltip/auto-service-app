@@ -47,6 +47,7 @@ public class OrderMapper implements RequestDtoMapper<OrderRequestDto, Order>,
         orderResponseDto.setWorkIds(order.getWorks().stream()
                 .map(Work::getId)
                 .collect(Collectors.toList()));
+        orderResponseDto.setCompletionDate(order.getCompletionDate());
         return orderResponseDto;
     }
 }

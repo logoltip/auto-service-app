@@ -10,6 +10,7 @@ import auto.service.autoserviceapp.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +35,10 @@ public class OrderController {
     public OrderResponseDto save(
             @RequestBody @ApiParam(value = "Order parameters") OrderRequestDto orderRequestDto
     ) {
-        Order order = orderService.save(requestDtoMapper.mapToModel(orderRequestDto));
-        return responseDtoMapper.mapToDto(order);
+        Order order = requestDtoMapper.mapToModel(orderRequestDto);
+        order.setOrderDate(LocalDate.now());
+        order.setOrderStatus(Order.OrderStatus.ACCEPTED);
+        return responseDtoMapper.mapToDto(orderService.save(order));
     }
 
     @PostMapping("/{id}/products")
@@ -76,7 +79,7 @@ public class OrderController {
             @RequestBody @ApiParam(value = "Order status") Order.OrderStatus orderStatus
     ) {
         Order order = orderService.updateOrderStatus(id, orderStatus);
-        return responseDtoMapper.mapToDto(orderService.save(order));
+        return responseDtoMapper.mapToDto(order);
     }
 
     @GetMapping("/{id}/cost")

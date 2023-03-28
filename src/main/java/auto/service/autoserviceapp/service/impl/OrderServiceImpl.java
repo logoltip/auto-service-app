@@ -30,8 +30,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order save(Order order) {
-        order.setOrderDate(LocalDate.now());
-        order.setOrderStatus(Order.OrderStatus.ACCEPTED);
         return orderRepository.save(order);
     }
 
@@ -79,6 +77,7 @@ public class OrderServiceImpl implements OrderService {
             order.setCompletionDate(LocalDate.now());
         }
         order.setOrderStatus(orderStatus);
+        save(order);
         return order;
     }
 
