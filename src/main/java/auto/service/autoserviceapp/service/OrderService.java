@@ -13,7 +13,7 @@ public interface OrderService {
 
     Order addProductsToOrder(Long orderId, List<Long> productIds);
 
-    Order addWorksToOrder(Long orderId, List<Long> productIds);
+    Order addWorksToOrder(Long orderId, List<Long> workIds);
 
     Order updateOrderStatus(Long orderId, Order.OrderStatus orderStatus);
 
